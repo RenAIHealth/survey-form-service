@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping({"/pictures"})
+@RequestMapping({"/api/pictures"})
 @EnableAutoConfiguration
 public class PictureController {
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.OPTIONS})
