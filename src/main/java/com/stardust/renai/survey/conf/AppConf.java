@@ -44,7 +44,7 @@ public class AppConf {
         }
         List<ServerAddress> hosts = new ArrayList();
         List<MongoCredential> credentials = new ArrayList();
-        hosts.add(new ServerAddress(dbServer, 3717));
+        hosts.add(new ServerAddress(dbServer, 27017));
         credentials.add(MongoCredential.createCredential(dbUser, "admin", dbPassword.toCharArray()));
         Mongo mongo = new MongoClient(hosts, credentials);
         return mongo;
