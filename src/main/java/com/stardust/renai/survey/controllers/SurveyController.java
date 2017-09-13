@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping({"/api/surveys"})
 @EnableAutoConfiguration
-public class SurveyController  {
+public class SurveyController {
     @Autowired
     SurveyService service;
 
@@ -21,13 +21,17 @@ public class SurveyController  {
 
     @RequestMapping(method = {RequestMethod.POST})
     public String submit(@RequestBody Survey survey, @RequestParam String verifyCode, HttpSession session) {
-        Object code = session.getAttribute(VERIFY_CODE_PREFIX + survey.getMobile());
+        // Object code = session.getAttribute(VERIFY_CODE_PREFIX + survey.getMobile());
 
-        if (code != null && verifyCode.equals(code.toString())) {
-            return service.save(survey).getId();
-        } else {
-            return "验证码错误";
+        // if (code != null && verifyCode.equals(code.toString())) {
+        Survey result = service.save(survey);
+        if (result != null && result.getId().length() > 0) {
+            return "SUCCESS";
         }
+        // } else {
+        //   return "验证码错误";
+        // }
+        return "ERROR";
     }
 
     @RequestMapping(value = "/{mobile}/verifycode", method = {RequestMethod.GET})
