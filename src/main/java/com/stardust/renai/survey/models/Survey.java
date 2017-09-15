@@ -17,7 +17,11 @@ public class Survey extends DataModel {
 
     private String agreement;
 
+    private String status;
+
     private String pictureUrl;
+
+    private List<String> tags;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date date;
@@ -27,6 +31,22 @@ public class Survey extends DataModel {
 
     @Embedded
     private List<Question> questions;
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;
