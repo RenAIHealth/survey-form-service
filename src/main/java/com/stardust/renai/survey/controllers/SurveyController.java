@@ -2,6 +2,8 @@ package com.stardust.renai.survey.controllers;
 
 import com.stardust.renai.survey.models.Survey;
 import com.stardust.renai.survey.services.SurveyService;
+import com.sun.deploy.net.HttpResponse;
+import jxl.write.WriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.domain.Page;
@@ -9,7 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -54,5 +58,26 @@ public class SurveyController {
         }
 
         return null;
+    }
+
+    @RequestMapping(value = "/excel", method = {RequestMethod.GET})
+    public void export(@RequestParam String ids, HttpServletResponse response) throws IOException, WriteException {
+        List<String> surveyIds = Arrays.asList(ids.split(","));
+        response.reset();
+        response.setHeader("Content-disposition", "attachment;filename=surveys-export.xls");
+        response.setContentType("application/msexcel");
+        service.export(surveyIds, response.getOutputStream());
+    }
+
+    @RequestMapping(value = "/handled", method = {RequestMethod.POST})
+    public void markAsHandled(@RequestParam String ids) {
+        List<String> surveyIds = Arrays.asList(ids.split(","));
+        service.updateSurveysStatus(surveyIds, "已处理");
+    }
+
+    @RequestMapping(value = "/pending", method = {RequestMethod.POST})
+    public void markAsPending(@RequestParam String ids) {
+        List<String> surveyIds = Arrays.asList(ids.split(","));
+        service.updateSurveysStatus(surveyIds, "待处理");
     }
 }
