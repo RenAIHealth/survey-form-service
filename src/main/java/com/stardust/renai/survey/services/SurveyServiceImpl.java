@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -24,11 +23,18 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
 
     @Override
     public Page<Survey> findPendingSurveys(Set<String> tags, Pageable page) {
-        return repository.findSurveysByTagsAndStatus(tags, "待处理" ,page);
+        return findSurveys(tags, "待处理" ,page);
     }
 
     @Override
     public Page<Survey> findHandledSurveys(Set<String> tags, Pageable page) {
-        return repository.findSurveysByTagsAndStatus(tags, "已处理" ,page);
+        return findSurveys(tags, "已处理" ,page);
+    }
+
+    Page<Survey> findSurveys(Set<String> tags, String status, Pageable page) {
+        if (tags != null && !tags.isEmpty()) {
+            return repository.findSurveysByTagsAndStatus(tags, status ,page);
+        }
+        return repository.findSurveysByStatus(status, page);
     }
 }

@@ -15,4 +15,7 @@ public interface SurveyRepository extends DataRepository<Survey, String> {
 
     @Query("{tags: {$all:?0}, status: ?1}")
     Page<Survey> findSurveysByTagsAndStatus(Set<String> tags, String status, Pageable page);
+
+    @Query("{status: ?0}")
+    Page<Survey> findSurveysByStatus(String status, Pageable page);
 }

@@ -25,18 +25,12 @@ public class SurveyController {
 
     @RequestMapping(method = {RequestMethod.POST})
     public String submit(@RequestBody Survey survey, @RequestParam String verifyCode, HttpSession session) {
-        // Object code = session.getAttribute(VERIFY_CODE_PREFIX + survey.getMobile());
-
-        // if (code != null && verifyCode.equals(code.toString())) {
         survey.setStatus("待处理");
         survey.setDate(new Date());
         Survey result = service.save(survey);
         if (result != null && result.getId().length() > 0) {
             return "SUCCESS";
         }
-        // } else {
-        //   return "验证码错误";
-        // }
         return "ERROR";
     }
 
@@ -45,12 +39,20 @@ public class SurveyController {
         session.setAttribute(VERIFY_CODE_PREFIX + mobile, "336699");
     }
 
-    @RequestMapping(value = "/", method = {RequestMethod.GET})
-    public Page<Survey> filterSurveys(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    @RequestMapping(value = "/{state}", method = {RequestMethod.GET})
+    public Page<Survey> filterSurveys(@PathVariable String state,
+                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
                                       @RequestParam(value = "size", defaultValue = "8") Integer size,
-                                      @RequestParam(value = "sort", defaultValue = "id") String sort) {
-        Set<String> tags = new HashSet<>();
-        tags.add("男");
-        return service.findPendingSurveys(tags, new PageRequest(page, size, new Sort(sort)));
+                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                      @RequestParam(value = "tags", defaultValue = "") String tags) {
+        Set<String> tagSet = tags.isEmpty() ? null : new HashSet<>(Arrays.asList(tags.split(",")));
+
+        if ("pending".equals(state)) {
+            return service.findPendingSurveys(tagSet, new PageRequest(page, size, new Sort(sort)));
+        } else if ("handled".equals(state)) {
+            return service.findHandledSurveys(tagSet, new PageRequest(page, size, new Sort(sort)));
+        }
+
+        return null;
     }
 }
