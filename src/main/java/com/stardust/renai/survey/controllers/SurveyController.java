@@ -47,7 +47,10 @@ public class SurveyController {
                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                       @RequestParam(value = "size", defaultValue = "8") Integer size,
                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                      @RequestParam(value = "tags", defaultValue = "") String tags) {
+                                      @RequestParam(value = "tags", defaultValue = "") String tags,
+                                      HttpSession session) {
+
+        if (session.getAttribute("currentUser") == null) return null;
         Set<String> tagSet = tags.isEmpty() ? null : new HashSet<>(Arrays.asList(tags.split(",")));
 
         if ("pending".equals(state)) {
@@ -60,7 +63,9 @@ public class SurveyController {
     }
 
     @RequestMapping(value = "/excel", method = {RequestMethod.GET})
-    public void export(@RequestParam String ids, HttpServletResponse response) throws IOException, WriteException {
+    public void export(@RequestParam String ids, HttpServletResponse response, HttpSession session) throws IOException, WriteException {
+        if (session.getAttribute("currentUser") == null) return;
+
         if (ids != null && !ids.isEmpty()) {
             List<String> surveyIds = Arrays.asList(ids.split(","));
             response.reset();
@@ -71,7 +76,9 @@ public class SurveyController {
     }
 
     @RequestMapping(value = "/handled", method = {RequestMethod.POST})
-    public void markAsHandled(@RequestParam String ids) {
+    public void markAsHandled(@RequestParam String ids, HttpSession session) {
+        if (session.getAttribute("currentUser") == null) return;
+
         if (ids != null && !ids.isEmpty()) {
             List<String> surveyIds = Arrays.asList(ids.split(","));
             service.updateSurveysStatus(surveyIds, "已处理");
@@ -79,7 +86,9 @@ public class SurveyController {
     }
 
     @RequestMapping(value = "/pending", method = {RequestMethod.POST})
-    public void markAsPending(@RequestParam String ids) {
+    public void markAsPending(@RequestParam String ids, HttpSession session) {
+        if (session.getAttribute("currentUser") == null) return;
+
         if (ids != null && !ids.isEmpty()) {
             List<String> surveyIds = Arrays.asList(ids.split(","));
             service.updateSurveysStatus(surveyIds, "待处理");
