@@ -34,13 +34,13 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
     }
 
     @Override
-    public Page<Survey> findPendingSurveys(Set<String> tags, Pageable page) {
-        return findSurveys(tags, "待处理" ,page);
+    public Page<Survey> findPendingSurveys(String name, Set<String> tags, Pageable page) {
+        return findSurveys(name, tags, "待处理" ,page);
     }
 
     @Override
-    public Page<Survey> findHandledSurveys(Set<String> tags, Pageable page) {
-        return findSurveys(tags, "已处理" ,page);
+    public Page<Survey> findHandledSurveys(String name, Set<String> tags, Pageable page) {
+        return findSurveys(name, tags, "已处理" ,page);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         labelFormat.setWrap(false);
         WritableSheet sheet = workbook.createSheet("调查问卷", 0);
 
-        sheet.addCell(new Label(0, 2, "手机", labelFormat));
+        sheet.addCell(new Label(0, 2, "手机 (邮箱)", labelFormat));
         sheet.addCell(new Label(1, 2, "日期", labelFormat));
         sheet.addCell(new Label(2, 2, "邮寄地址", labelFormat));
         sheet.addCell(new Label(3, 2, "图片附件", labelFormat));
@@ -70,7 +70,7 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         for (String id : ids) {
             Survey survey = repository.findOne(id);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sheet.addCell(new Label(0, rowIdx, survey.getMobile(), labelFormat));
+            sheet.addCell(new Label(0, rowIdx, survey.getMobile() + " (" + survey.getEmail() + ")", labelFormat));
             sheet.addCell(new Label(1, rowIdx, sdf.format(survey.getDate()), labelFormat));
             sheet.addCell(new Label(2, rowIdx, survey.getShippingAddress(), labelFormat));
             sheet.addHyperlink(new WritableHyperlink(3, rowIdx, new URL(survey.getPictureUrl())));
@@ -95,10 +95,12 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         }
     }
 
-    Page<Survey> findSurveys(Set<String> tags, String status, Pageable page) {
+    Page<Survey> findSurveys(String name, Set<String> tags, String status, Pageable page) {
         if (tags != null && !tags.isEmpty()) {
-            return repository.findSurveysByTagsAndStatus(tags, status ,page);
+            return name == null || name.isEmpty() ? repository.findSurveysByTagsAndStatus(tags, status ,page) :
+                    repository.findSurveysByTagsAndStatus(name, tags, status ,page);
         }
-        return repository.findSurveysByStatus(status, page);
+        return name == null || name.isEmpty() ? repository.findSurveysByStatus(status, page) :
+                repository.findSurveysByStatus(name, status, page);
     }
 }

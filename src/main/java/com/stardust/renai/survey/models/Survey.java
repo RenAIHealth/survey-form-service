@@ -15,11 +15,17 @@ public class Survey extends DataModel {
 
     private String mobile;
 
+    private String email;
+
     private String agreement;
 
     private String status;
 
     private String pictureUrl;
+
+    private String specimen;
+
+    private String name;
 
     private List<String> tags;
 
@@ -102,5 +108,29 @@ public class Survey extends DataModel {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSpecimen() {
+        return specimen;
+    }
+
+    public void setSpecimen(String specimen) {
+        this.specimen = specimen;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

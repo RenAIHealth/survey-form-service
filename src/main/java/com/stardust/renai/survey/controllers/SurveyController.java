@@ -44,6 +44,7 @@ public class SurveyController {
 
     @RequestMapping(value = "/{state}", method = {RequestMethod.GET})
     public Page<Survey> filterSurveys(@PathVariable String state,
+                                      @RequestParam(value = "name", defaultValue = "") String name,
                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                       @RequestParam(value = "size", defaultValue = "8") Integer size,
                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -54,9 +55,9 @@ public class SurveyController {
         Set<String> tagSet = tags.isEmpty() ? null : new HashSet<>(Arrays.asList(tags.split(",")));
 
         if ("pending".equals(state)) {
-            return service.findPendingSurveys(tagSet, new PageRequest(page, size, new Sort(sort)));
+            return service.findPendingSurveys(name, tagSet, new PageRequest(page, size, new Sort(sort)));
         } else if ("handled".equals(state)) {
-            return service.findHandledSurveys(tagSet, new PageRequest(page, size, new Sort(sort)));
+            return service.findHandledSurveys(name, tagSet, new PageRequest(page, size, new Sort(sort)));
         }
 
         return null;

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface SurveyService extends EntityService<Survey> {
-    Page<Survey> findPendingSurveys(Set<String> tags, Pageable page);
-    Page<Survey> findHandledSurveys(Set<String> tags, Pageable page);
+    Page<Survey> findPendingSurveys(String name, Set<String> tags, Pageable page);
+    Page<Survey> findHandledSurveys(String name, Set<String> tags, Pageable page);
     void export(List<String> ids, OutputStream outputStream) throws IOException, WriteException;
     void updateSurveysStatus(List<String> ids, String status);
 }
