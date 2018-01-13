@@ -139,7 +139,7 @@ public class Survey extends DataModel {
     }
 
     public String getUserId() {
-        return userId;
+        return userId == null ? "" : userId;
     }
 
     public void setUserId(String userId) {
@@ -147,7 +147,7 @@ public class Survey extends DataModel {
     }
 
     public String getSeqNo() {
-        return seqNo;
+        return seqNo == null ? "" : seqNo;
     }
 
     public void setSeqNo(String seqNo) {

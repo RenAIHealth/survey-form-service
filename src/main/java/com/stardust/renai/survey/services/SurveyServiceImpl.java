@@ -55,10 +55,13 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         labelFormat.setWrap(false);
         WritableSheet sheet = workbook.createSheet("调查问卷", 0);
 
-        sheet.addCell(new Label(0, 2, "手机 (邮箱)", labelFormat));
-        sheet.addCell(new Label(1, 2, "日期", labelFormat));
-        sheet.addCell(new Label(2, 2, "邮寄地址", labelFormat));
-        sheet.addCell(new Label(3, 2, "图片附件", labelFormat));
+        sheet.addCell(new Label(0, 2, "用户识别号", labelFormat));
+        sheet.addCell(new Label(1, 2, "序列号", labelFormat));
+        sheet.addCell(new Label(2, 2, "手机 (邮箱)", labelFormat));
+        sheet.addCell(new Label(3, 2, "日期", labelFormat));
+        sheet.addCell(new Label(4, 2, "邮寄地址", labelFormat));
+        sheet.addCell(new Label(5, 2, "图片附件", labelFormat));
+
         int columnIdx = 4;
         Survey firstSurvey = repository.findOne(ids.get(0));
 
@@ -71,10 +74,12 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         for (String id : ids) {
             Survey survey = repository.findOne(id);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sheet.addCell(new Label(0, rowIdx, survey.getMobile() + " (" + survey.getEmail() + ")", labelFormat));
-            sheet.addCell(new Label(1, rowIdx, sdf.format(survey.getDate()), labelFormat));
-            sheet.addCell(new Label(2, rowIdx, survey.getShippingAddress(), labelFormat));
-            sheet.addHyperlink(new WritableHyperlink(3, rowIdx, new URL(survey.getPictureUrl())));
+            sheet.addCell(new Label(0, rowIdx, survey.getUserId(), labelFormat));
+            sheet.addCell(new Label(1, rowIdx, survey.getSeqNo(), labelFormat));
+            sheet.addCell(new Label(2, rowIdx, survey.getMobile() + " (" + survey.getEmail() + ")", labelFormat));
+            sheet.addCell(new Label(3, rowIdx, sdf.format(survey.getDate()), labelFormat));
+            sheet.addCell(new Label(4, rowIdx, survey.getShippingAddress(), labelFormat));
+            sheet.addHyperlink(new WritableHyperlink(5, rowIdx, new URL(survey.getPictureUrl())));
             columnIdx = 4;
             for (Question question : survey.getQuestions()) {
                 sheet.addCell(new Label(columnIdx, rowIdx, question.getValue(), labelFormat));
