@@ -27,4 +27,8 @@ public interface SurveyRepository extends DataRepository<Survey, String> {
 
     @Query("{status: ?0}")
     Page<Survey> findSurveysByStatus(String status, Pageable page);
+
+    Long countByName(String name);
+
+    Survey findSurveyByNameAndUserId(String name, String userId);
 }

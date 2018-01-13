@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -93,6 +94,20 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
             survey.setStatus(status);
             repository.save(survey);
         }
+    }
+
+    @Override
+    public synchronized Survey submit(Survey survey) {
+        if (survey.getUserId() != null && !survey.getUserId().isEmpty()) {
+            Survey existing = repository.findSurveyByNameAndUserId(survey.getName(), survey.getUserId());
+            if (existing != null) throw new RuntimeException("用户已经提交过本次问卷，不能重复提交");
+        }
+        final int seqNoLength = 7;
+        survey.setStatus("待处理");
+        survey.setDate(new Date());
+        Long count = repository.countByName(survey.getName());
+        survey.setSeqNo(String.format("%0" + seqNoLength + "d", count + 1));
+        return this.save(survey);
     }
 
     Page<Survey> findSurveys(String name, Set<String> tags, String status, Pageable page) {

@@ -13,6 +13,10 @@ public class Survey extends DataModel {
     @Id
     private String id;
 
+    private String userId;
+
+    private String seqNo;
+
     private String mobile;
 
     private String email;
@@ -132,5 +136,21 @@ public class Survey extends DataModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
     }
 }

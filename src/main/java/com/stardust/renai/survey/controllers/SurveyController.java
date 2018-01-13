@@ -28,13 +28,16 @@ public class SurveyController {
 
     @RequestMapping(method = {RequestMethod.POST})
     public String submit(@RequestBody Survey survey, @RequestParam String verifyCode, HttpSession session) {
-        survey.setStatus("待处理");
-        survey.setDate(new Date());
-        Survey result = service.save(survey);
-        if (result != null && result.getId().length() > 0) {
-            return "SUCCESS";
+        try {
+            Survey result = service.submit(survey);
+            if (result != null && result.getId().length() > 0) {
+                return "SUCCESS:" + result.getSeqNo();
+            }
+        } catch (Exception e) {
+            return "ERROR:" + e.getMessage();
         }
-        return "ERROR";
+
+        return "ERROR:UNKNOWN";
     }
 
     @RequestMapping(value = "/{mobile}/verifycode", method = {RequestMethod.GET})
