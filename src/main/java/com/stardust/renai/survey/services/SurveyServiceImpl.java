@@ -79,7 +79,9 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
             sheet.addCell(new Label(2, rowIdx, survey.getMobile() + " (" + survey.getEmail() + ")", labelFormat));
             sheet.addCell(new Label(3, rowIdx, sdf.format(survey.getDate()), labelFormat));
             sheet.addCell(new Label(4, rowIdx, survey.getShippingAddress(), labelFormat));
-            sheet.addHyperlink(new WritableHyperlink(5, rowIdx, new URL(survey.getPictureUrl())));
+            if (survey.getPictureUrl() != null) {
+                sheet.addHyperlink(new WritableHyperlink(5, rowIdx, new URL(survey.getPictureUrl())));
+            }
             columnIdx = 6;
             for (Question question : survey.getQuestions()) {
                 sheet.addCell(new Label(columnIdx, rowIdx, question.getValue(), labelFormat));
@@ -113,6 +115,12 @@ public class SurveyServiceImpl extends AbstractEntityService<Survey> implements 
         Long count = repository.countByName(survey.getName());
         survey.setSeqNo(String.format("%0" + seqNoLength + "d", count + 1));
         return this.save(survey);
+    }
+
+    @Override
+    public boolean hasSubmitted(String name, String userId) {
+        Survey existing = repository.findSurveyByNameAndUserId(name, userId);
+        return existing != null;
     }
 
     Page<Survey> findSurveys(String name, Set<String> tags, String status, Pageable page) {

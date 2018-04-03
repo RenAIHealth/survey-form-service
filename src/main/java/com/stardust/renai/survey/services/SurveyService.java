@@ -17,4 +17,5 @@ public interface SurveyService extends EntityService<Survey> {
     void export(List<String> ids, OutputStream outputStream) throws IOException, WriteException;
     void updateSurveysStatus(List<String> ids, String status);
     Survey submit(Survey survey);
+    boolean hasSubmitted(String name, String userId);
 }

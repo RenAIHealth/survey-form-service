@@ -45,6 +45,14 @@ public class SurveyController {
         session.setAttribute(VERIFY_CODE_PREFIX + mobile, "336699");
     }
 
+    @RequestMapping(value = "/{name}/users/{userId}", method = {RequestMethod.GET})
+    public String surveySubmittedUser(@PathVariable String name, @PathVariable String userId) {
+        if (service.hasSubmitted(name, userId)) {
+            return userId;
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/{state}", method = {RequestMethod.GET})
     public Page<Survey> filterSurveys(@PathVariable String state,
                                       @RequestParam(value = "name", defaultValue = "") String name,
